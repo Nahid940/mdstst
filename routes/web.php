@@ -22,6 +22,9 @@ use Bulkly\BufferPosting;
 use GuzzleHttp\Exception\ClientException;
 
 
+
+Route::get('history','SubscriptionController@getHistory');
+
 Route::get('/user/invoice/{invoice}', function (Request $request, $invoiceId) {
     return $request->user()->downloadInvoice($invoiceId, [
         'vendor'  => 'Bulk.ly',
@@ -51,17 +54,7 @@ Route::get('/group-test/{id}', function(Request $request, $id){
         }
         dump($rsspostsarray[0]);
 
-
-
-
-
-
     }
-
-
-
-
-
 
 });
 

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Bulkly\User;
 use Bulkly\Plan;
 use Bulkly\SocialPostGroups;
+use Illuminate\Support\Facades\DB;
 use Mail;
 use Laravel\Cashier\Cashier;
 
@@ -235,5 +236,20 @@ class SubscriptionController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+
+    /**
+     * function to ge the histories
+    */
+    public function getHistory()
+    {
+        $history=DB::table('buffer_postings')
+            ->join('social_post_groups','social_post_groups.id','=','buffer_postings.group_id')
+            ->join('social_accounts','social_accounts.id','=','buffer_postings.account_id')
+            ->select('social_post_groups.name as group_name','social_post_groups.type',
+            'social_accounts.name as account_name','social_accounts.avatar','post_text','buffer_postings.created_at')
+            ->get();
+        return view('test.history')->with('history',$history);
     }
 }
