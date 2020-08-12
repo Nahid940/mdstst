@@ -39,15 +39,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $__currentLoopData = $history; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $hstry): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <tr>
-                            <td><?php echo e($hstry->group_name); ?></td>
-                            <td><?php echo e($hstry->type); ?></td>
-                            <td><?php echo e($hstry->account_name); ?></td>
-                            <td style="width: 20%"><?php echo e($hstry->post_text); ?></td>
-                            <td><?php echo e(date('d M Y h:i a',strtotime($hstry->created_at))); ?></td>
-                        </tr>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        <?php if(sizeof($history)>=1): ?>
+                            <?php $__currentLoopData = $history; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $hstry): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <tr>
+                                <td><?php echo e($hstry->group_name); ?></td>
+                                <td><?php echo e($hstry->type); ?></td>
+                                <td><?php echo e($hstry->account_name); ?></td>
+                                <td style="width: 20%"><?php echo e($hstry->post_text); ?></td>
+                                <td><?php echo e(date('d M Y h:i a',strtotime($hstry->created_at))); ?></td>
+                            </tr>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        <?php else: ?>
+                            <div class="alert alert-danger">No data found !!</div>
+                        <?php endif; ?>
                     </tbody>
                 </table>
                 <div class="pageslink"><?php echo e($history->appends(request()->toArray())->links()); ?></div>

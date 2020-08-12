@@ -41,15 +41,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($history as $hstry)
-                        <tr>
-                            <td>{{$hstry->group_name}}</td>
-                            <td>{{$hstry->type}}</td>
-                            <td>{{$hstry->account_name}}</td>
-                            <td style="width: 20%">{{$hstry->post_text}}</td>
-                            <td>{{date('d M Y h:i a',strtotime($hstry->created_at))}}</td>
-                        </tr>
-                        @endforeach
+                        @if(sizeof($history)>=1)
+                            @foreach($history as $hstry)
+                            <tr>
+                                <td>{{$hstry->group_name}}</td>
+                                <td>{{$hstry->type}}</td>
+                                <td>{{$hstry->account_name}}</td>
+                                <td style="width: 20%">{{$hstry->post_text}}</td>
+                                <td>{{date('d M Y h:i a',strtotime($hstry->created_at))}}</td>
+                            </tr>
+                            @endforeach
+                        @else
+                            <div class="alert alert-danger">No data found !!</div>
+                        @endif
                     </tbody>
                 </table>
                 <div class="pageslink">{{$history->appends(request()->toArray())->links()}}</div>
