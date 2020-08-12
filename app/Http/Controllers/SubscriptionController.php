@@ -272,7 +272,7 @@ class SubscriptionController extends Controller
         }
         else if($request->search == "" && $request->date!="" && $request->group=="")
         {
-            return $query->where('buffer_postings.created_at', '=', "{$request->date}");
+            return $query->whereDate('buffer_postings.created_at', '=', "{$request->date}");
         }
 
         else if($request->search == "" && $request->date=="" && $request->group!="")
@@ -283,11 +283,11 @@ class SubscriptionController extends Controller
         else if($request->search!="" && $request->date!="" && $request->group=="")
         {
             return  $query->where('social_post_groups.name', 'like', "{$request->search}%")
-                ->where('buffer_postings.created_at', '=', "{$request->date}");
+                ->whereDate('buffer_postings.created_at', '=', "{$request->date}");
         }
         else if($request->search=="" && $request->date!="" && $request->group!="")
         {
-            return  $query->where('social_post_groups.created_at', 'like', "{$request->date}")
+            return  $query->whereDate('buffer_postings.created_at', '=', "{$request->date}")
                 ->where('social_post_groups.type', '=', "{$request->group}");
         }
         else if($request->search!="" && $request->date=="" && $request->group!="")
@@ -298,7 +298,7 @@ class SubscriptionController extends Controller
         else if($request->search != "" && $request->date!='' && $request->group!="")
         {
             return $query->where('social_post_groups.name', 'like', "%{$request->search}%")
-                ->where('buffer_postings.created_at', '=', "{$request->date}")
+                ->whereDate('buffer_postings.created_at', '=', "{$request->date}")
                 ->where('social_post_groups.type', '=', "{$request->group}");
         }
     }
