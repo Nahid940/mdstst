@@ -1,14 +1,34 @@
-<?php $__env->startSection('style'); ?>
-    <style>
-        #history-table  th{
-            background-color: #00aa9a!important;
-        }
-    </style>
-<?php $__env->stopSection(); ?>
 <?php $__env->startSection('content'); ?>
     <div class="container-fluid app-body">
         <div class="row">
             <div class="col-md-12">
+                <div class="row">
+                    <form action="" method="get">
+                        <div class="col-sm-3 search-area">
+                            <div class="time-picker">
+                                <input name="search" type="text" value="<?php echo e(request()->input('search')); ?>" placeholder="Search" class="form-control search-fld">
+                            </div>
+                        </div>
+                        <div class="col-sm-3 search-area">
+                            <div class="time-picker">
+                                <input name="date" type="date"  value="<?php echo e(request()->input('date')); ?>"  class="form-control search-fld">
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="group">
+                                <select name="group" id="" class="form-control search-fld">
+                                    <option value="">All Group</option>
+                                    <?php $__currentLoopData = $groups; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $group): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option  <?php echo e(request()->input('group')==$group->type?'selected':''); ?> value="<?php echo e($group->type); ?>"><?php echo e(ucfirst($group->type)); ?></option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary"><i class="fa fa-search"></i></button>
+                        <a href="<?php echo e(route('history')); ?>" class="btn btn-warning"><i class="fa fa-refresh"></i></a>
+                    </form>
+                </div>
                 <table class="table table-hover border table social-accounts" id="history-table">
                     <thead>
                         <tr><th>Group Name</th>
@@ -30,6 +50,7 @@
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </tbody>
                 </table>
+                <div class="pageslink"><?php echo e($history->appends(request()->toArray())->links()); ?></div>
             </div>
         </div>
     </div>

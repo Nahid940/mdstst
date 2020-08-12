@@ -23,7 +23,7 @@ use GuzzleHttp\Exception\ClientException;
 
 
 
-Route::get('history','SubscriptionController@getHistory');
+Route::get('history','SubscriptionController@getHistory')->name('history');
 
 Route::get('/user/invoice/{invoice}', function (Request $request, $invoiceId) {
     return $request->user()->downloadInvoice($invoiceId, [

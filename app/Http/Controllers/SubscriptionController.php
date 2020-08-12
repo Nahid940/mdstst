@@ -242,14 +242,69 @@ class SubscriptionController extends Controller
     /**
      * function to ge the histories
     */
-    public function getHistory()
+    public function getHistory(Request $request)
     {
-        $history=DB::table('buffer_postings')
+        $query=DB::table('buffer_postings')
             ->join('social_post_groups','social_post_groups.id','=','buffer_postings.group_id')
             ->join('social_accounts','social_accounts.id','=','buffer_postings.account_id')
             ->select('social_post_groups.name as group_name','social_post_groups.type',
-            'social_accounts.name as account_name','social_accounts.avatar','post_text','buffer_postings.created_at')
-            ->get();
-        return view('test.history')->with('history',$history);
+            'social_accounts.name as account_name','social_accounts.avatar',
+            'post_text','buffer_postings.created_at');
+
+        if(empty($this->queryProcess($request,$query)))
+        {
+            $history=$query->paginate(5);
+        }else
+        {
+            $history=$this->queryProcess($request,$query)->paginate(5);
+        }
+
+        return view('test.history')->with(['history'=>$history,'groups'=>$this->getAllGroups()]);
+    }
+
+
+    //return the processed query string
+    public function queryProcess($request,$query)
+    {
+        if ($request->search != "" && $request->date=="" && $request->group=="") {
+            return $query->where('social_post_groups.name', 'like', "{$request->search}%");
+
+        }
+        else if($request->search == "" && $request->date!="" && $request->group=="")
+        {
+            return $query->where('buffer_postings.created_at', '=', "{$request->date}");
+        }
+
+        else if($request->search == "" && $request->date=="" && $request->group!="")
+        {
+            return $query->where('social_post_groups.type', '=', "{$request->group}");
+        }
+
+        else if($request->search!="" && $request->date!="" && $request->group=="")
+        {
+            return  $query->where('social_post_groups.name', 'like', "{$request->search}%")
+                ->where('buffer_postings.created_at', '=', "{$request->date}");
+        }
+        else if($request->search=="" && $request->date!="" && $request->group!="")
+        {
+            return  $query->where('social_post_groups.created_at', 'like', "{$request->date}")
+                ->where('social_post_groups.type', '=', "{$request->group}");
+        }
+        else if($request->search!="" && $request->date=="" && $request->group!="")
+        {
+            return  $query->where('social_post_groups.name', 'like', "{$request->search}%")
+                ->where('social_post_groups.type', '=', "{$request->group}");
+        }
+        else if($request->search != "" && $request->date!='' && $request->group!="")
+        {
+            return $query->where('social_post_groups.name', 'like', "%{$request->search}%")
+                ->where('buffer_postings.created_at', '=', "{$request->date}")
+                ->where('social_post_groups.type', '=', "{$request->group}");
+        }
+    }
+
+    public function getAllGroups()
+    {
+        return $groups=DB::table("social_post_groups")->select('type')->distinct()->get();
     }
 }
